@@ -3,19 +3,20 @@ package com.project.Teampl.controller;
 import com.project.Teampl.model.User;
 import com.project.Teampl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 
-import java.util.ArrayList;
+import javax.validation.Valid;
 import java.util.List;
 
-@RestController
-@RequestMapping("user")
+//@RestController
+//@RequestMapping("user")
+@Controller
 public class UserController {
 
     @Autowired
@@ -23,12 +24,40 @@ public class UserController {
 
     @RequestMapping("/")
     public String getMessage(){
-        return "hello World";
+        return "home";
     }
 
-    @GetMapping(value="/all", produces = {MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<List<User>> getAllUsers(){
+    @GetMapping("/user/signIn")
+    public String signInForm(Model model) {
+        model.addAttribute("userForm", new UserForm());
+        return "/user/userSignForm";
+    }
+
+    @PostMapping("/user/signIn")
+    public String signIn(@Valid UserForm userForm, BindingResult result) {
+
+        if(result.hasErrors()) {
+            return "/user/userSignForm";
+        }
+
+        User user = new User();
+        user.setUsername(userForm.getUsername());
+        user.setUserid(userForm.getUserid());
+        user.setUserpw(userForm.getUserpw());
+
+        userService.signIn(user);
+
+        return "redirect:/";
+    }
+
+//    @GetMapping(value="/all", produces = {MediaType.APPLICATION_JSON_VALUE})
+//    public ResponseEntity<List<User>> getAllUsers(){
+    @GetMapping("/user/all")
+    public String getAllUsers(Model model) {
         List<User> users = userService.findAll();
-        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        model.addAttribute("users", users);
+
+//        return new ResponseEntity<List<User>>(users, HttpStatus.OK);
+        return "/user/userList";
     }
 }

@@ -8,11 +8,13 @@ import java.util.List;
 public interface UserService {
     List<User> findAll();
 
+    User save(User user);
+
+    Long signIn(User user);
+
     User findById(int useridx);
 
     void deleteById(int useridx);
-
-    User save(User user);
 
     void updateById(int useridx, User user);
 
