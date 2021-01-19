@@ -26,6 +26,8 @@ class RegisterViewController: UIViewController {
     }
     var isRegisterSuccessful = false
     @IBOutlet weak var emailTextField: UITextField!
+    @IBAction func emailTextField(_ sender: Any) {
+    }
     
     
     override func viewDidLoad() {
@@ -105,6 +107,7 @@ class RegisterViewController: UIViewController {
         idTextField.attributedPlaceholder = NSAttributedString(string: "UserID", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
         passwordTextField.attributedPlaceholder = NSAttributedString(string: "Password", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
         passwordConfirmTextfield.attributedPlaceholder = NSAttributedString(string: "Password Confirm", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+        emailTextField.attributedPlaceholder = NSAttributedString(string: "E-mail", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
         //
     }
     

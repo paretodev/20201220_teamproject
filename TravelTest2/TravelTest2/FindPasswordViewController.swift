@@ -15,6 +15,9 @@ class FindPasswordViewController: UIViewController {
     @IBOutlet weak var warningLabel: UILabel!
     @IBOutlet weak var userIDTextField: UITextField!
     @IBOutlet weak var okButton: UIButton!
+    @IBAction func backButtonPressed(_ sender: Any) {
+        navigationController?.popViewController(animated: true)
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -25,6 +28,7 @@ class FindPasswordViewController: UIViewController {
     @IBAction func tryFindPassword(_ sender: Any) {
         //
         if userIDTextField.text!.isEmpty {
+            buttonPressUIConfigure()
             return
         }
         
@@ -34,7 +38,7 @@ class FindPasswordViewController: UIViewController {
         ApiMananger.sharedInstance.callingResetLoginAPI(id: userIDTextField.text!){ [self] success, failureCode in
             
             if success == true {
-                makeAlert(withTitle: "알림", withDetai: "비밀 번호 재설정 링크를 가입하신 이메일로 전송하였습니다.")
+                makeAlert(withTitle: "알림", withDetai: "새로 발급된 비밀번호를 등록하신 이메일로 전송하였습니다.")
                 return
             }
             
@@ -44,7 +48,7 @@ class FindPasswordViewController: UIViewController {
                 case "UNK":
                     makeAlert(withTitle: "오류", withDetai: "프로그램에 오류가 발생했습니다. 빠른 시간 내에 해결하겠습니다.")
                 case "NNC":
-                    makeAlert(withTitle: "오류", withDetai: "네트워크가 연결되어 있지 않습니다. 네트워크를 확인해주세요.")
+                    makeAlert(withTitle: "오류", withDetai: "네트워크가 연결되어 있지 않거나, 아이디가 틀린 양식입니다(영문,숫자 조합)")
                 default :
                     break
             }
