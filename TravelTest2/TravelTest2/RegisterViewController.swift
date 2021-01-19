@@ -25,6 +25,8 @@ class RegisterViewController: UIViewController {
         navigationController?.popViewController(animated: true)
     }
     var isRegisterSuccessful = false
+    @IBOutlet weak var emailTextField: UITextField!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -48,7 +50,8 @@ class RegisterViewController: UIViewController {
         //MARK:- Send Request to the server with id/pw
         let id = idTextField.text!
         let password = passwordTextField.text!
-        let registerModel = RegisterModel(id: id, password: password)
+        let email = emailTextField.text!
+        let registerModel = RegisterModel(id: id, password: password, email : email )
         
         //
         ApiMananger.sharedInstance.callingRegisterAPI(register: registerModel){ [weak self]

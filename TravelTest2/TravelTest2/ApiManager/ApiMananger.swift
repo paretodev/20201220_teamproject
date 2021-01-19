@@ -126,4 +126,51 @@ class ApiMananger {
             }
         }
     }
+    
+    //MARK:- Send Set Password Again API Call
+    func callingResetLoginAPI(id: String,  completionHandler : @escaping (Bool, String) -> ()){ // Code : "NNC", "UNF" DEAL !! REST - GIVE UP
+        
+        AF.request(base_url + "/restorepassword/\(id)", method: .get, parameters: nil, headers: nil).response{ response in
+            switch response.result {
+                case .success(let data) :
+                    if response.response?.statusCode == 200 {
+                        completionHandler(true, "")
+                    }
+                    else{
+                        do {
+                            let json = try JSONDecoder().decode( ErrorMessageModel.self, from: data! )
+                            let code = json.code
+                            if code == 3020 {
+                                completionHandler(false, "UNF")
+                            }
+                            else{
+                                completionHandler(false, "UNK")
+                            }
+                        } catch  {
+                            completionHandler(false, "UNK")
+                        }
+                    }
+                case .failure(let error) :
+                    print("Error While Password Reset API Call : \(error.localizedDescription)")
+                    completionHandler(false, "NNC")
+            }
+        }
+    }
+    
+    // https://api.backendless.com/<application-id>/<REST-api-key>/users/restorepassword/<user-identity-property>  <- id
+        /* error msg in json
+     {
+       "message":error-message,
+       "code":error-code
+     }
+     2002
+     Version is disabled or provided wrong application info (application id or secret key)
+     3020
+     Unable to find user with the specified login (invalid user identity).
+     3025
+     General password recovery error. Additional details should be available in the "message" property of the response.
+     3038
+     One of the requirement arguments (application id, version or user identity) is missing.
+     */
+    
 }

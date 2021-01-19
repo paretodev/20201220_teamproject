@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Foundation
 
 class FindPasswordViewController: UIViewController {
     
@@ -22,6 +23,35 @@ class FindPasswordViewController: UIViewController {
     }
     
     @IBAction func tryFindPassword(_ sender: Any) {
+        //
+        if userIDTextField.text!.isEmpty {
+            return
+        }
+        
+        //
+        buttonPressUIConfigure()
+        //MARK:- 비밀번호 찾기 요청을 보낸다 -> Email로 비밀 번호를 보내준다 !! -> 메이크 센스
+        ApiMananger.sharedInstance.callingResetLoginAPI(id: userIDTextField.text!){ [self] success, failureCode in
+            
+            if success == true {
+                makeAlert(withTitle: "알림", withDetai: "비밀 번호 재설정 링크를 가입하신 이메일로 전송하였습니다.")
+                return
+            }
+            
+            switch failureCode {
+                case "UNF":
+                    makeAlert(withTitle: "알림", withDetai: "등록되지 않은 아이디 입니다.")
+                case "UNK":
+                    makeAlert(withTitle: "오류", withDetai: "프로그램에 오류가 발생했습니다. 빠른 시간 내에 해결하겠습니다.")
+                case "NNC":
+                    makeAlert(withTitle: "오류", withDetai: "네트워크가 연결되어 있지 않습니다. 네트워크를 확인해주세요.")
+                default :
+                    break
+            }
+        }
+        
+        
+        //
     }
     
     /*
@@ -41,6 +71,34 @@ class FindPasswordViewController: UIViewController {
         okButton.backgroundColor = .white
         okButton.layer.cornerRadius = 8
         okButton.setTitleColor(UIColor(named: "nBlue"), for: .normal)
+    }
+    //
+    func buttonPressUIConfigure(){
+    
+        if userIDTextField.text!.isEmpty {
+            userIDTextField.attributedPlaceholder = NSAttributedString(string: "UserID", attributes: [NSAttributedString.Key.foregroundColor : UIColor.systemRed])
+            whiteBar.backgroundColor = UIColor.systemRed
+            warningLabel.textColor = UIColor.systemRed
+        }
+        else{
+            userIDTextField.attributedPlaceholder = NSAttributedString(string: "UserID", attributes: [NSAttributedString.Key.foregroundColor : UIColor.white])
+            whiteBar.backgroundColor = .white
+            warningLabel.textColor = UIColor(named: "nBlue")
+        }
+    
+    }
+    
+    
+    //MARK: -
+    func makeAlert(withTitle title : String, withDetai detaill : String){
+        let alert = UIAlertController(title:title , message: detaill, preferredStyle: .alert)
+        let action = UIAlertAction(title: "확인", style: .default){_ in
+            //MARK: - Handle here
+            print("do nothing")
+        }
+        
+        alert.addAction( action )
+        self.present(alert, animated: true, completion: nil)
     }
     
 //
